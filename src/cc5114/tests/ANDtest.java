@@ -1,4 +1,4 @@
-package tests;
+package cc5114.tests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,8 +8,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import perceptron.ANDPerceptron;
-import perceptron.Perceptron;
+import cc5114.perceptron.ANDPerceptron;
+import cc5114.perceptron.Perceptron;
 
 public class ANDtest {
 	private Perceptron andPerceptron;

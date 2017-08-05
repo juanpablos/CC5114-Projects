@@ -1,4 +1,4 @@
-package perceptron;
+package cc5114.perceptron;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,13 +1,9 @@
 package cc5114.perceptron;
 
-import java.util.Arrays;
-import java.util.List;
+public class ANDPerceptron extends TwoInputPerceptron {
 
-public class ANDPerceptron extends Perceptron {
-	final static List<Integer> input = Arrays.asList(2, 2);
-
-	public ANDPerceptron() {
-		super(input, -3);
-	}
+    public ANDPerceptron() {
+	super(2, 2, -3);
+    }
 
 }

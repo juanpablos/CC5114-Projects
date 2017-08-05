@@ -5,46 +5,39 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import cc5114.perceptron.ANDPerceptron;
-import cc5114.perceptron.Perceptron;
+import cc5114.perceptron.ITwoInputPerceptron;
 
 public class ANDtest {
-	private Perceptron andPerceptron;
+    private ITwoInputPerceptron andPerceptron;
 
-	@Before
-	public void setUp() throws Exception {
-		andPerceptron = new ANDPerceptron();
-	}
+    @Before
+    public void setUp() throws Exception {
+	andPerceptron = new ANDPerceptron();
+    }
 
-	@Test
-	public void falseTest() {
-		final List<Integer> input = Arrays.asList(0,0);
-		final int res = andPerceptron.eval(input);
-		assertEquals("Should be 0", 0, res);
-	}
+    @Test
+    public void falseTest() {
+	final int res = andPerceptron.evalTwo(0, 0);
+	assertEquals("Should be 0", 0, res);
+    }
 
-	@Test
-	public void trueTest() {
-		final List<Integer> input = Arrays.asList(1,1);
-		final int res = andPerceptron.eval(input);
-		assertEquals("Should be 1", 1, res);
-	}
+    @Test
+    public void trueTest() {
+	final int res = andPerceptron.evalTwo(1, 1);
+	assertEquals("Should be 1", 1, res);
+    }
 
-	@Test
-	public void falseTest2() {
-		final List<Integer> input = Arrays.asList(0,1);
-		final int res = andPerceptron.eval(input);
-		assertEquals("Should be 0", 0, res);
-	}
+    @Test
+    public void falseTest2() {
+	final int res = andPerceptron.evalTwo(0, 1);
+	assertEquals("Should be 0", 0, res);
+    }
 
-	@Test
-	public void falseTest3() {
-		final List<Integer> input = Arrays.asList(1,0);
-		final int res = andPerceptron.eval(input);
-		assertEquals("Should be 0", 0, res);
-	}
+    @Test
+    public void falseTest3() {
+	final int res = andPerceptron.evalTwo(1, 0);
+	assertEquals("Should be 0", 0, res);
+    }
 
 }

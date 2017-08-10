@@ -55,7 +55,7 @@ def make_learning_graph(canvas, iterations=200, calc_points=100, threshold=1.):
 
     for iteration in range(iterations):
         perceptron = Perceptron([1., 5.], -1)
-        sigmoid = Sigmoid([1., 5.], -1, 0.5)
+        sigmoid = Sigmoid([1., 5.], -1, threshold)
 
         # training
         for train in range(iteration):
@@ -98,15 +98,15 @@ def make_learning_graph(canvas, iterations=200, calc_points=100, threshold=1.):
     for i in range(iterations):
         x_axis.append(i)
 
-    plt.plot(x_axis, perceptron_training_correctness, 'b', x_axis, sigmoid_training_correctness, 'r', alpha=0.5)
+    per_label, = plt.plot(x_axis, perceptron_training_correctness, 'b', alpha=0.5, label='Perceptron')
+    sig_label, = plt.plot(x_axis, sigmoid_training_correctness, 'r', alpha=0.5, label='Sigmoid')
+    plt.legend(handles=[per_label, sig_label])
     axes = plt.gca()
     axes.set_ylim([0, 1])
+    plt.xlabel('Number of iterations')
+    plt.ylabel('Average correct prediction')
     plt.show()
 
 
-# good curve
-make_learning_graph(50, iterations=1000, threshold=1.)
-# no
-make_learning_graph(50, iterations=200, threshold=0.5)
-# no
-make_learning_graph(50, iterations=200, threshold=0.2)
+
+make_learning_graph(50, iterations=200, threshold=0.6)

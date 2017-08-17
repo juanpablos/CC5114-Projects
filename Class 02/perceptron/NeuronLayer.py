@@ -1,3 +1,5 @@
+import random
+
 from perceptron.Neurons import Sigmoid
 
 
@@ -10,21 +12,29 @@ class NeuronLayer:
         for _ in range(self.number):
             weight = []
             for i in range(n_inputs):
-                weight.append(self.setWeight())
-            bias = self.setBias()
+                weight.append(self.set_weight())
+            bias = self.set_bias()
             self.neurons.append(Sigmoid(weight, bias))
 
-    def setWeight(self):
-        return 4
+    def set_weight(self):
+        # TODO: randomize
+        #return 4.
+        return random.uniform(-4, 4)
 
-    def setBias(self):
-        return 1
+    def set_bias(self):
+        # TODO: randomize
+        #return 1.
+        return random.uniform(-4, 4)
 
     def get_number_neurons(self):
         return self.number
 
-    def evaluate(self, inputs):
+    def feed(self, inputs):
         output = list()
+        print(inputs)
         for neuron in self.neurons:
             output.append(neuron.evaluate(inputs))
         return output
+
+    def get_info(self):
+        return "neurons: {}, weights: {}".format(len(self.neurons), len(self.neurons[0].weights))

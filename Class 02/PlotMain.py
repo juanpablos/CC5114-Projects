@@ -31,7 +31,7 @@ def make_visual_graph(a_neuron, canvas, training_iterations, showing_points, thr
         x = random.uniform(-canvas, canvas)
         y = random.uniform(-canvas, canvas)
 
-        output = a_neuron.evaluate([x, y])
+        output = a_neuron.feed([x, y])
 
         if output >= threshold:
             x_red_point.append(x)

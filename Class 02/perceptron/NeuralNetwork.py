@@ -16,12 +16,21 @@ class NeuralNetwork:
 
             self.layers[0].initialize(n_inputs)
             for i in range(1, len(self.layers)):
-                self.layers[i].initialize(self.layers[i-1].get_number_neurons())
+                self.layers[i].initialize(self.layers[i - 1].get_number_neurons())
             self.firstLayer = self.layers[0]
-            self.lastLayer = self.layers[len(self.layers)-1]
+            self.lastLayer = self.layers[len(self.layers) - 1]
 
         except AssertionError:
             print("Needs at least 2 layers.")
 
-    def evaluate(self, inputs):
-        print(self.firstLayer.evaluate(inputs))
+    def feed(self, inputs):
+        out = self.firstLayer.feed(inputs)
+        for layer in self.layers:
+            if layer is not self.firstLayer:
+                out = layer.feed(out)
+
+        return out
+
+    def print_net_info(self):
+        for layer in self.layers:
+            print("layer {}: {}".format(self.layers.index(layer), layer.get_info()))

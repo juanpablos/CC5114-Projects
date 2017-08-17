@@ -4,7 +4,6 @@ learning_rate = 0.01
 
 
 class Perceptron:
-
     def __init__(self, weight_list, bias):
         self.weights = np.array(weight_list)
         self.bias = bias
@@ -39,7 +38,6 @@ class Perceptron:
 
 
 class Sigmoid(Perceptron):
-
     def __init__(self, weight_list, bias, threshold=0.5):
         super().__init__(weight_list, bias)
         self.threshold = threshold
@@ -48,7 +46,7 @@ class Sigmoid(Perceptron):
         try:
             assert len(self.weights) == len(input_list)
 
-            res_sum = sum(self.weights * np.array(input_list))
+            res_sum = sum(self.weights * np.array(input_list)) + self.bias
             return self.activation_function(res_sum)
 
         except AssertionError:

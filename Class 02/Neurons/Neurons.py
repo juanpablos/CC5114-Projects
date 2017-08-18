@@ -2,7 +2,7 @@ import numpy as np
 
 from .exceptions import UnmatchedLengthError
 
-learning_rate = 0.01
+learning_rate = 0.5
 
 
 class Perceptron:
@@ -40,6 +40,9 @@ class Perceptron:
 
 
 class Sigmoid(Perceptron):
+    output = None
+    delta = None
+
     def __init__(self, weight_list, bias, threshold=0.5):
         super().__init__(weight_list, bias)
         self.threshold = threshold
@@ -49,7 +52,10 @@ class Sigmoid(Perceptron):
             assert len(self.weights) == len(input_list)
 
             res_sum = sum(self.weights * np.array(input_list)) + self.bias
-            return self.activation_function(res_sum)
+
+            total_res = self.activation_function(res_sum)
+            self.output = total_res
+            return total_res
 
         except AssertionError:
             raise UnmatchedLengthError(weights=len(self.weights), inputs=len(input_list))
@@ -67,6 +73,17 @@ class Sigmoid(Perceptron):
             self.decrease_weights(input_train_list)
         elif normalized_output < expected_result:
             self.increase_weights(input_train_list)
+
+    def update_delta(self, error):
+        self.delta = error * self.output * (1.0 - self.output)
+
+    def update_weights(self, inputs):
+        for i in range(len(inputs)):
+
+            self.weights[i] += (learning_rate * self.delta * inputs[i])
+
+    def update_bias(self):
+        self.bias += (learning_rate * self.delta)
 
     @staticmethod
     def activation_function(z):

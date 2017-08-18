@@ -1,14 +1,15 @@
 import random
-from Neurons.Neurons import Perceptron, Sigmoid
+
 import matplotlib.pyplot as plt
+
+from Neurons.Neurons import Perceptron, Sigmoid
 
 
 def f(an_x):
-    return an_x*4 + 1
+    return an_x * 4 + 1
 
 
 def make_visual_graph(a_neuron, canvas, training_iterations, showing_points, threshold=1):
-
     x_function = list()
     y_function = list()
 
@@ -40,7 +41,7 @@ def make_visual_graph(a_neuron, canvas, training_iterations, showing_points, thr
             x_blue_point.append(x)
             y_blue_point.append(y)
 
-    for j in range(2*int(-canvas/3), 2*int(canvas/3)):
+    for j in range(2 * int(-canvas / 3), 2 * int(canvas / 3)):
         x_function.append(j)
         y_function.append(f(j))
 
@@ -49,7 +50,6 @@ def make_visual_graph(a_neuron, canvas, training_iterations, showing_points, thr
 
 
 def make_learning_graph(canvas, iterations=200, calc_points=100, threshold=1.):
-
     perceptron_training_correctness = list()
     sigmoid_training_correctness = list()
 
@@ -69,7 +69,7 @@ def make_learning_graph(canvas, iterations=200, calc_points=100, threshold=1.):
             perceptron.train([rand_x, rand_y], ideal_output)
             sigmoid.train([rand_x, rand_y], ideal_output)
 
-        #evaluation
+        # evaluation
         correct_points_perceptron = 0
         correct_points_sigmoid = 0
         for point in range(calc_points):
@@ -106,7 +106,6 @@ def make_learning_graph(canvas, iterations=200, calc_points=100, threshold=1.):
     plt.xlabel('Number of iterations')
     plt.ylabel('Average correct prediction')
     plt.show()
-
 
 
 make_learning_graph(50, iterations=200, threshold=0.6)

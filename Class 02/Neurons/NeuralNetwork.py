@@ -1,9 +1,8 @@
 from Neurons.NeuronLayer import NeuronLayer
-from Neurons.exceptions import UnmatchedLengthError, LayerError
+from Neurons.exceptions import LayerError
 
 
 class NeuralNetwork:
-
     def __init__(self, manual=False):
         self.firstLayer = None
         self.layers = list()
@@ -21,7 +20,6 @@ class NeuralNetwork:
         else:
             print("Network is already initialized. Cannot add another layer. Don't try.")
 
-
     def initialize(self, n_inputs=None):
         try:
             assert len(self.layers) > 1
@@ -38,10 +36,6 @@ class NeuralNetwork:
 
         except AssertionError:
             raise LayerError("Needs at least 2 layers.")
-
-
-
-
 
     #
     #

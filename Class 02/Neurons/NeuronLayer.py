@@ -16,7 +16,6 @@ class NeuronLayer:
             bias = self.set_rand_bias()
             self.neurons.append(Sigmoid(weights, bias))
 
-
     def set_rand_weights(self):
         return random.uniform(-4, 4)
 

@@ -1,9 +1,5 @@
 from Neurons.NeuralNetwork import NeuralNetwork
 
-from Neurons.Neurons import Sigmoid
-from Neurons.exceptions import UnmatchedLengthError
-
-
 network = NeuralNetwork()
 network.add_layer(neuron_number=30)
 network.add_layer(neuron_number=100)
@@ -17,4 +13,3 @@ network.print_net_info()
 
 out = network.feed([1, 1, 1, 10])
 print("Network evaluation: {}".format(out))
-

@@ -1,6 +1,16 @@
 import random
+
 import numpy as np
+
 from Neurons.Neurons import Sigmoid
+
+
+def set_rand_weights():
+    return random.random()
+
+
+def set_rand_bias():
+    return random.random()
 
 
 class NeuronLayer:
@@ -12,15 +22,9 @@ class NeuronLayer:
         for _ in range(self.number):
             weights = []
             for i in range(n_inputs):
-                weights.append(self.set_rand_weights())
-            bias = self.set_rand_bias()
+                weights.append(set_rand_weights())
+            bias = set_rand_bias()
             self.neurons.append(Sigmoid(weights, bias))
-
-    def set_rand_weights(self):
-        return random.random()
-
-    def set_rand_bias(self):
-        return random.random()
 
     def get_number_neurons(self):
         return self.number
@@ -75,7 +79,6 @@ class NeuronLayer:
     def update_neuron_bias(self):
         for neuron in self.neurons:
             neuron.update_bias()
-
 
     def print_deltas(self):
         for neuron in self.neurons:

@@ -1,5 +1,7 @@
 import numpy as np
 
+from .exceptions import UnmatchedLengthError
+
 learning_rate = 0.01
 
 
@@ -50,7 +52,8 @@ class Sigmoid(Perceptron):
             return self.activation_function(res_sum)
 
         except AssertionError:
-            print("The length of the input defers from the weights vector.")
+            raise UnmatchedLengthError(weights=len(self.weights), inputs=len(input_list))
+
         except TypeError:
             print("You either entered a non number list in constructor or input. Types don't match.")
 
@@ -69,4 +72,4 @@ class Sigmoid(Perceptron):
     @staticmethod
     def activation_function(z):
         value = np.exp(-z)
-        return 1 / (1 + value)
+        return 1. / (1. + value)

@@ -1,5 +1,5 @@
 import random
-from perceptron.Neurons import Perceptron, Sigmoid
+from Neurons.Neurons import Perceptron, Sigmoid
 import matplotlib.pyplot as plt
 
 

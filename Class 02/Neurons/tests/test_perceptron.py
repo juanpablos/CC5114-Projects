@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from perceptron.Neurons import Perceptron, learning_rate
+from Neurons.Neurons import Perceptron, learning_rate
 
 
 class TestPerceptron(TestCase):

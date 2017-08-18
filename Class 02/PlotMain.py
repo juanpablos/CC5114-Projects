@@ -1,6 +1,8 @@
 import random
-from perceptron.Neurons import Perceptron, Sigmoid
+
 import matplotlib.pyplot as plt
+
+from Neurons.Neurons import Perceptron, Sigmoid
 
 
 def f(an_x):

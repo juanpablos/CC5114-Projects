@@ -1,4 +1,4 @@
-from perceptron.NeuralNetwork import NeuralNetwork
+from Neurons.NeuralNetwork import NeuralNetwork
 
 network = NeuralNetwork(neurons_first=30)
 network.add_layer(neuron_number=100)

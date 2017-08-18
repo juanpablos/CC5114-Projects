@@ -53,7 +53,6 @@ class Sigmoid(Perceptron):
 
         except AssertionError:
             raise UnmatchedLengthError(weights=len(self.weights), inputs=len(input_list))
-
         except TypeError:
             print("You either entered a non number list in constructor or input. Types don't match.")
 

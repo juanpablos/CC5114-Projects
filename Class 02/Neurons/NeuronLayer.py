@@ -14,17 +14,26 @@ def set_rand_bias():
 
 
 class NeuronLayer:
-    def __init__(self, number):
+    def __init__(self, number=None):
+
         self.number = number
         self.neurons = list()
 
-    def initialize(self, n_inputs):
-        for _ in range(self.number):
-            weights = []
-            for i in range(n_inputs):
-                weights.append(set_rand_weights())
-            bias = set_rand_bias()
-            self.neurons.append(Sigmoid(weights, bias))
+    def initialize(self, n_inputs=None, neuron_weights=None):
+        if neuron_weights:
+            self.number = len(neuron_weights)
+            # TODO: check constraints
+            for w in neuron_weights:
+                self.neurons.append(Sigmoid(w[:-1], w[-1]))
+            return self
+        else:
+            # TODO: check for inputs not None
+            for _ in range(self.number):
+                weights = []
+                for i in range(n_inputs):
+                    weights.append(set_rand_weights())
+                bias = set_rand_bias()
+                self.neurons.append(Sigmoid(weights, bias))
 
     def get_number_neurons(self):
         return self.number
@@ -87,3 +96,7 @@ class NeuronLayer:
     def print_weights(self):
         for neuron in self.neurons:
             print(neuron.weights)
+
+    def print_bias(self):
+        for neuron in self.neurons:
+            print(neuron.bias)

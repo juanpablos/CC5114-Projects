@@ -37,7 +37,7 @@ class NeuralNetwork:
             except AssertionError:
                 raise LayerError("Needs at least 2 layers.")
         else:
-            #TODO: check for constraints
+            # TODO: check for constraints
             for layer in network:
                 self.layers.append(NeuronLayer().initialize(neuron_weights=layer))
             self.firstLayer = self.layers[0]
@@ -59,7 +59,7 @@ class NeuralNetwork:
 
     def train(self, inputs, expected_output):
         # STEP 1
-        self.feed(inputs)
+        output = self.feed(inputs)
 
         # STEP 2
         # last
@@ -81,10 +81,16 @@ class NeuralNetwork:
             self.layers[j].update_neuron_weights(output_collection)
             self.layers[j].update_neuron_bias()
 
-    def train_with_dataset(self, dataset, reps):
-        for _ in range(reps):
+        return sum([(expected_output[i] - output[i]) ** 2 for i in range(len(expected_output))])
+
+    def train_with_dataset(self, dataset, epoch):
+        error = list()
+        for _ in range(epoch):
+            local_error = 0
             for data in dataset:
-                self.train(data['inputs'], data['expected'])
+                local_error += self.train(data[0], data[1])
+            error.append(local_error)
+        return error
 
     def print_deltas(self):
         print("-----deltas-----")

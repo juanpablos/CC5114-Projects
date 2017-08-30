@@ -12,15 +12,14 @@ network.print_weights()
 network.print_bias()
 
 
-network.train_with_dataset(dataset=[
-    {'inputs': [1., 1.], 'expected': [0]},
-    {'inputs': [0., 1.], 'expected': [1]},
-    {'inputs': [1., 0.], 'expected': [1]},
-    {'inputs': [1., 1.], 'expected': [0]},
-    {'inputs': [1., 1.], 'expected': [0]},
-    {'inputs': [0., 0.], 'expected': [0]},
-    {'inputs': [0., 1.], 'expected': [1]}
-], reps=1000)
+a = network.train_with_dataset(dataset=[
+    [[0., 0.], [0]],
+    [[1., 1.], [0]],
+    [[1., 0.], [1]],
+    [[0., 1.], [1]]
+], epoch=100)
+
+print(a)
 
 oneone = network.feed([1., 1.])[0]
 onecero = network.feed([1., 0.])[0]
@@ -52,7 +51,7 @@ network_trained = NeuralNetwork(manual=True)
 
 network_trained.initialize(network=done_network)
 
-# network_trained.print_net_info()
+network_trained.print_net_info()
 
 oneone2 = network_trained.feed([1., 1.])[0]
 onecero2 = network_trained.feed([1., 0.])[0]

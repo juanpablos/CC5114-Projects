@@ -6,7 +6,7 @@ from Neurons.NeuralNetwork import NeuralNetwork
 
 def make_learning_graph(iterations=1000, evaluation=100):
     network_correctness = list()
-
+    total_error = list()
     for iteration in range(iterations):
         network = NeuralNetwork(manual=True)
         network.initialize(network=[
@@ -22,12 +22,12 @@ def make_learning_graph(iterations=1000, evaluation=100):
 
         print(iteration)
         # training
-        network.train_with_dataset(dataset=[
-            {'inputs': [1., 1.], 'expected': [0]},
-            {'inputs': [0., 1.], 'expected': [1]},
-            {'inputs': [1., 0.], 'expected': [1]},
-            {'inputs': [0., 0.], 'expected': [0]}
-        ], reps=iteration)
+        error = network.train_with_dataset(dataset=[
+            [[0., 0.], [0]],
+            [[1., 1.], [0]],
+            [[1., 0.], [1]],
+            [[0., 1.], [1]]
+        ], epoch=iteration)
 
 
         # evaluation
@@ -44,18 +44,24 @@ def make_learning_graph(iterations=1000, evaluation=100):
             if ideal_output == normalized_output:
                 correctness += 1
 
+        if error:
+            total_error.append(error[-1])
         network_correctness.append(correctness / evaluation)
 
     x_axis = list()
     for i in range(iterations):
         x_axis.append(i)
 
+    total_error.insert(0, total_error[0])
+
     per_label, = plt.plot(x_axis, network_correctness, 'b', alpha=0.5, label='Network training')
-    plt.legend(handles=[per_label])
+    error_label, = plt.plot(x_axis, total_error, 'r', alpha=0.5, label='Network error')
+    plt.legend(handles=[per_label, error_label])
     axes = plt.gca()
-    axes.set_ylim([0, 1])
-    plt.xlabel('Number of iterations')
+    axes.set_ylim([0, max(total_error) + 1])
+    plt.xlabel('Epochs')
     plt.ylabel('Average correct prediction')
+    plt.title('Training of XOR')
     plt.show()
 
 

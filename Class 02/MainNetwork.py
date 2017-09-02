@@ -11,7 +11,6 @@ network.initialize(n_inputs=2)
 network.print_weights()
 network.print_bias()
 
-
 a = network.train_with_dataset(dataset=[
     [[0., 0.], [0]],
     [[1., 1.], [0]],
@@ -32,20 +31,17 @@ print("1 AND 0 = {} actual output: {}".format(round(onecero, 0), onecero))
 print("0 AND 1 = {} actual output: {}".format(round(ceroone, 0), ceroone))
 print("0 AND 0 = {} actual output: {}".format(round(cerocero, 0), cerocero))
 
-
-
-
 done_network = \
-[
     [
-        [2.57147557, 1.89695434, 0.380250607417],
-        [6.78504447, -5.92964121, 2.97653335647],
-        [4.41535064, -5.97567152, -1.96438569666]
-    ],
-    [
-        [2.80838347, -9.39005226, 9.18965719, 2.00463814965]
+        [
+            [2.57147557, 1.89695434, 0.380250607417],
+            [6.78504447, -5.92964121, 2.97653335647],
+            [4.41535064, -5.97567152, -1.96438569666]
+        ],
+        [
+            [2.80838347, -9.39005226, 9.18965719, 2.00463814965]
+        ]
     ]
-]
 
 network_trained = NeuralNetwork(manual=True)
 

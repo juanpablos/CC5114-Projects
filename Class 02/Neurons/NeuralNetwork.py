@@ -14,8 +14,7 @@ class NeuralNetwork:
     def add_layer(self, neuron_number):
         if not self.initialized:
             if self.manual:
-                print("You are on manual, enter a full network in initialize.")
-                pass
+                print("You are on manual, enter a full network to/in initialize.")
             else:
                 self.layers.append(NeuronLayer(number=neuron_number))
         else:
@@ -37,13 +36,18 @@ class NeuralNetwork:
             except AssertionError:
                 raise LayerError("Needs at least 2 layers.")
         else:
-            # TODO: check for constraints
-            for layer in network:
-                self.layers.append(NeuronLayer().initialize(neuron_weights=layer))
-            self.firstLayer = self.layers[0]
-            self.lastLayer = self.layers[len(self.layers) - 1]
+            try:
+                assert network is not None
+                assert isinstance(network, list)
 
-            self.initialized = True
+                for layer in network:
+                    self.layers.append(NeuronLayer().initialize(neuron_weights=layer))
+                self.firstLayer = self.layers[0]
+                self.lastLayer = self.layers[len(self.layers) - 1]
+
+                self.initialized = True
+            except AssertionError:
+                raise LayerError("The passed network is not valid.")
 
     def feed(self, inputs):
         out = self.firstLayer.feed(inputs)

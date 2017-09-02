@@ -61,6 +61,7 @@ class Sigmoid(Perceptron):
             raise UnmatchedLengthError(weights=len(self.weights), inputs=len(input_list))
         except TypeError:
             print("You either entered a non number list in constructor or input. Types don't match.")
+            raise
 
     def train(self, input_train_list, expected_result):
         local_result = self.evaluate(input_train_list)
@@ -79,7 +80,6 @@ class Sigmoid(Perceptron):
 
     def update_weights(self, inputs):
         for i in range(len(inputs)):
-
             self.weights[i] += (learning_rate * self.delta * inputs[i])
 
     def update_bias(self):

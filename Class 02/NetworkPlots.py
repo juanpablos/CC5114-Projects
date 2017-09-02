@@ -1,8 +1,9 @@
-
-import matplotlib.pyplot as plt
 import random
 
+import matplotlib.pyplot as plt
+
 from Neurons.NeuralNetwork import NeuralNetwork
+
 
 def make_learning_graph(iterations=1000, evaluation=100):
     network_correctness = list()
@@ -10,15 +11,15 @@ def make_learning_graph(iterations=1000, evaluation=100):
     for iteration in range(iterations):
         network = NeuralNetwork(manual=True)
         network.initialize(network=[
-    [
-        [0.52005262, 0.50090067, 0.6476664410034432],
-        [0.6634167, 0.34459219, 0.934842553959054],
-        [0.7176642, 0.41593824, 0.1908567125038647]
-    ],
-    [
-        [0.05263594, 0.63529249, 0.89631397, 0.7987314051068816]
-    ]
-])
+            [
+                [0.52005262, 0.50090067, 0.6476664410034432],
+                [0.6634167, 0.34459219, 0.934842553959054],
+                [0.7176642, 0.41593824, 0.1908567125038647]
+            ],
+            [
+                [0.05263594, 0.63529249, 0.89631397, 0.7987314051068816]
+            ]
+        ])
 
         print(iteration)
         # training
@@ -29,14 +30,13 @@ def make_learning_graph(iterations=1000, evaluation=100):
             [[0., 1.], [1]]
         ], epoch=iteration)
 
-
         # evaluation
         correctness = 0
         for test in range(evaluation):
             bool1 = random.randint(0, 1)
             bool2 = random.randint(0, 1)
 
-            ideal_output = bool1^bool2
+            ideal_output = bool1 ^ bool2
 
             actual = network.feed([bool1, bool2])
             normalized_output = round(actual[0], 0)
@@ -65,4 +65,4 @@ def make_learning_graph(iterations=1000, evaluation=100):
     plt.show()
 
 
-make_learning_graph(iterations=1000)
+make_learning_graph(iterations=800)

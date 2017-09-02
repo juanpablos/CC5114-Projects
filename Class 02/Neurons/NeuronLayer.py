@@ -3,6 +3,7 @@ import random
 import numpy as np
 
 from Neurons.Neurons import Sigmoid
+from Neurons.exceptions import LayerError
 
 
 def set_rand_weights():
@@ -27,13 +28,16 @@ class NeuronLayer:
                 self.neurons.append(Sigmoid(w[:-1], w[-1]))
             return self
         else:
-            # TODO: check for inputs not None
-            for _ in range(self.number):
-                weights = []
-                for i in range(n_inputs):
-                    weights.append(set_rand_weights())
-                bias = set_rand_bias()
-                self.neurons.append(Sigmoid(weights, bias))
+            try:
+                assert n_inputs is not None
+                for _ in range(self.number):
+                    weights = []
+                    for i in range(n_inputs):
+                        weights.append(set_rand_weights())
+                    bias = set_rand_bias()
+                    self.neurons.append(Sigmoid(weights, bias))
+            except AssertionError:
+                raise LayerError("The number of inputs can not be None if not inputting weights.")
 
     def get_number_neurons(self):
         return self.number

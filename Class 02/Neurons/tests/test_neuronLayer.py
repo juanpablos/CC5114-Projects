@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from Neurons.NeuronLayer import NeuronLayer
+from Neurons.exceptions import LayerError
 
 
 class TestNeuronLayer(TestCase):
@@ -25,7 +26,31 @@ class TestNeuronLayer(TestCase):
 
         self.assertEqual(len(self.layer.neurons[0].weights), 2, 'There should be 2 weight per neuron.')
 
+    def test_initialize_ex(self):
+        _pass = False
+        a_layer = NeuronLayer()
+        try:
+            a_layer.initialize()
+        except LayerError:
+            _pass = True
+        self.assertTrue(_pass, "It should raise a LayerError.")
+
     def test_evaluate_len(self):
         self.setUp2()
         output = self.layer.feed([1, 1])
         self.assertEqual(len(output), 10, 'There should be 10 outputs, as 10 neurons.')
+
+    def test_collect_weights(self):
+        inputs = 10
+        self.setUp()
+        self.layer.initialize(inputs)
+
+        the_weights = self.layer.collect_weights(inputs)
+        self.assertTrue(type(the_weights) == list, "The type should be a list.")
+        self.assertEqual(len(the_weights), 10, "There should be 10 sets.")
+        self.assertEqual(len(the_weights[0]), 4, "There should be 4 weights per set")
+
+    def test_feed(self):
+        self.setUp2()
+        out = self.layer.feed([1, 1])
+        self.assertEqual(len(out), 10, "There should be 10 outputs as 10 neurons.")

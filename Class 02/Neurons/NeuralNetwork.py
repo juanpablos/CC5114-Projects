@@ -3,7 +3,7 @@ from Neurons.exceptions import LayerError
 
 
 class NeuralNetwork:
-    def __init__(self, manual=False):
+    def __init__(self, manual=False, learning_rate=0.5):
         self.firstLayer = None
         self.layers = list()
         self.lastLayer = None
@@ -11,12 +11,14 @@ class NeuralNetwork:
         self.manual = manual
         self.initialized = False
 
+        self.learning_rate = learning_rate
+
     def add_layer(self, neuron_number):
         if not self.initialized:
             if self.manual:
                 print("You are on manual, enter a full network to/in initialize.")
             else:
-                self.layers.append(NeuronLayer(number=neuron_number))
+                self.layers.append(NeuronLayer(number=neuron_number, learning_rate=self.learning_rate))
         else:
             print("Network is already initialized. Cannot add another layer. Don't try.")
 

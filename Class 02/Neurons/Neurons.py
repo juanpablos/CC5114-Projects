@@ -2,13 +2,12 @@ import numpy as np
 
 from .exceptions import UnmatchedLengthError
 
-learning_rate = 0.5
-
 
 class Perceptron:
-    def __init__(self, weight_list, bias):
+    def __init__(self, weight_list, bias, learning_rate=0.5):
         self.weights = np.array(weight_list)
         self.bias = bias
+        self.learning_rate = learning_rate
 
     def evaluate(self, input_list):
         try:
@@ -33,18 +32,18 @@ class Perceptron:
             self.increase_weights(input_train_list)
 
     def decrease_weights(self, inputs):
-        self.weights -= np.array(inputs) * learning_rate
+        self.weights -= np.array(inputs) * self.learning_rate
 
     def increase_weights(self, inputs):
-        self.weights += np.array(inputs) * learning_rate
+        self.weights += np.array(inputs) * self.learning_rate
 
 
 class Sigmoid(Perceptron):
     output = None
     delta = None
 
-    def __init__(self, weight_list, bias, threshold=0.5):
-        super().__init__(weight_list, bias)
+    def __init__(self, weight_list, bias, threshold=0.5, learning_rate=0.5):
+        super().__init__(weight_list, bias, learning_rate=learning_rate)
         self.threshold = threshold
 
     def evaluate(self, input_list):
@@ -80,10 +79,10 @@ class Sigmoid(Perceptron):
 
     def update_weights(self, inputs):
         for i in range(len(inputs)):
-            self.weights[i] += (learning_rate * self.delta * inputs[i])
+            self.weights[i] += (self.learning_rate * self.delta * inputs[i])
 
     def update_bias(self):
-        self.bias += (learning_rate * self.delta)
+        self.bias += (self.learning_rate * self.delta)
 
     @staticmethod
     def activation_function(z):

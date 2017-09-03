@@ -15,17 +15,19 @@ def set_rand_bias():
 
 
 class NeuronLayer:
-    def __init__(self, number=None):
+    def __init__(self, number=None, learning_rate=0.5):
 
         self.number = number
         self.neurons = list()
+
+        self.learning_rate = learning_rate
 
     def initialize(self, n_inputs=None, neuron_weights=None):
         if neuron_weights:
             self.number = len(neuron_weights)
             # TODO: check constraints
             for w in neuron_weights:
-                self.neurons.append(Sigmoid(w[:-1], w[-1]))
+                self.neurons.append(Sigmoid(w[:-1], w[-1], learning_rate=self.learning_rate))
             return self
         else:
             try:
@@ -35,7 +37,7 @@ class NeuronLayer:
                     for i in range(n_inputs):
                         weights.append(set_rand_weights())
                     bias = set_rand_bias()
-                    self.neurons.append(Sigmoid(weights, bias))
+                    self.neurons.append(Sigmoid(weights, bias, learning_rate=self.learning_rate))
             except AssertionError:
                 raise LayerError("The number of inputs can not be None if not inputting weights.")
 

@@ -8,7 +8,7 @@ from Neurons.NeuralNetwork import NeuralNetwork
 def make_learning_graph(iterations=1000, evaluation=100):
     network_correctness = list()
     total_error = list()
-    for iteration in range(iterations):
+    for iteration in range(1, iterations):
         network = NeuralNetwork(manual=True)
         network.initialize(network=[
             [
@@ -49,10 +49,10 @@ def make_learning_graph(iterations=1000, evaluation=100):
         network_correctness.append(correctness / evaluation)
 
     x_axis = list()
-    for i in range(iterations):
+    for i in range(1, iterations):
         x_axis.append(i)
 
-    total_error.insert(0, total_error[0])
+    #total_error.insert(1, total_error[0])
 
     per_label, = plt.plot(x_axis, network_correctness, 'b', alpha=0.5, label='Network training')
     error_label, = plt.plot(x_axis, total_error, 'r', alpha=0.5, label='Network error')
@@ -65,4 +65,4 @@ def make_learning_graph(iterations=1000, evaluation=100):
     plt.show()
 
 
-make_learning_graph(iterations=800)
+make_learning_graph(iterations=100)

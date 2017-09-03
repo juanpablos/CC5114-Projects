@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from Neurons.NeuronLayer import NeuronLayer
 
-from src.Neurons.exceptions import LayerError
+from Neurons.exceptions import LayerError
 
 
 class TestNeuronLayer(TestCase):

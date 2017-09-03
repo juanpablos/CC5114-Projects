@@ -1,5 +1,5 @@
-from src.Neurons.NeuronLayer import NeuronLayer
-from src.Neurons.exceptions import LayerError
+from Neurons.NeuronLayer import NeuronLayer
+from Neurons.exceptions import LayerError
 
 
 class NeuralNetwork:

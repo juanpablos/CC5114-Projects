@@ -2,8 +2,8 @@ import random
 
 import numpy as np
 
-from src.Neurons.Neurons import Sigmoid
-from src.Neurons.exceptions import LayerError
+from Neurons.Neurons import Sigmoid
+from Neurons.exceptions import LayerError
 
 
 def set_rand_weights():

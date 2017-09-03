@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from Neurons.NeuralNetwork import NeuralNetwork
 
-from src.Neurons.exceptions import LayerError
+from Neurons.exceptions import LayerError
 
 
 class TestNeuralNetwork(TestCase):
@@ -27,21 +27,15 @@ class TestNeuralNetwork(TestCase):
 
     def test_initialize_exp(self):
         self.setUp()
-        _pass = False
-        try:
-            self.network.initialize()
-        except LayerError:
-            _pass = True
-        self.assertTrue(_pass, "It should raise a LayerError.")
+        with self.assertRaises(LayerError):
+            with self.assertRaises(AssertionError):
+                self.network.initialize()
 
     def test_initialize_manual_exp(self):
         self.setUpManual()
-        _pass = False
-        try:
-            self.network.initialize()
-        except LayerError:
-            _pass = True
-        self.assertTrue(_pass, "It should raise a LayerError.")
+        with self.assertRaises(LayerError):
+            with self.assertRaises(AssertionError):
+                self.network.initialize()
 
     def test_initialized(self):
         self.setUp()

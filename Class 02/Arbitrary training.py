@@ -1,10 +1,12 @@
 import csv
 import random
+import matplotlib
 
 import matplotlib.pyplot as plt
 
 from Neurons.NeuralNetwork import NeuralNetwork
 
+matplotlib.style.use('ggplot')
 
 def normalize(value, min_value, max_value, norm_l=0, norm_h=1):
     out = (value - min_value) * (norm_h - norm_l)
@@ -13,6 +15,7 @@ def normalize(value, min_value, max_value, norm_l=0, norm_h=1):
     return out
 
 
+# Dont mind this...
 def get_normalized_seeds(file):
     with open(file) as f:
         ff = csv.reader(f, delimiter=',')
@@ -65,6 +68,7 @@ def get_normalized_seeds(file):
         return _file
 
 
+# Just works for the seeds dataset, but the idea is to divide the dataset
 def split_seeds(formatted_array, number_test=40):
     train_set = list()
     train_expected = list()
@@ -107,7 +111,7 @@ def two_scales(ax1, x, data1, data2, c1, c2):
     ax1.set_ylabel('Error')
 
     ax2.plot(x, data2, color=c2)
-    ax2.set_ylabel('Correct prediction')
+    ax2.set_ylabel('Average correct prediction')
     return ax1, ax2
 
 
@@ -121,7 +125,7 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
     network_correctness = list()
     total_error = list()
 
-    for iteration in range(iterations):
+    for iteration in range(1, iterations):
         network = NeuralNetwork(manual=True)
         network.initialize(network=[
             [
@@ -161,25 +165,17 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
         network_correctness.append(correctness / len(test_set))
 
     x_axis = list()
-    for i in range(iterations):
+    for i in range(1, iterations):
         x_axis.append(i)
 
-    total_error.insert(0, 0)
-
     fig, ax = plt.subplots()
-    two_scales(ax, x_axis, total_error, network_correctness, 'r', 'b')
+    ax1, ax2 = two_scales(ax, x_axis, total_error, network_correctness, 'r', 'b')
+    ax1.set_ylim([0, max(total_error)])
+
     plt.title("Seeds dataset with {} test iterations".format(len(test_set)))
     plt.show()
 
-    # per_label, = plt.plot(x_axis, network_correctness, 'b', alpha=0.5, label='Network training')
-    # error_label, = plt.plot(x_axis, total_error, 'r', alpha=0.5, label='Network error')
-    # plt.legend(handles=[per_label, error_label])
-    # plt.xlabel('Epochs')
-    # plt.ylabel('Average correct prediction')
-    # plt.title('Training for seeds dataset')
-    # plt.show()
-
 train, test, train_exp, test_exp = split_seeds(get_normalized_seeds("formatted_seeds.txt"), 35)
 
-# This is reaaaaally slow, but shows a cool plot
-make_learning_graph(train, test, train_exp, test_exp, iterations=500)
+# This is reeeeeally slow, but shows a cool plot
+make_learning_graph(train, test, train_exp, test_exp, iterations=50)

@@ -63,3 +63,8 @@ class TestNeuralNetwork(TestCase):
         self.setUpNet()
         out = self.network.feed([5, 10])
         self.assertEqual(len(out), 4, "The output length should be the same as neurons in the last layer.")
+
+    def test_network_topology(self):
+        self.setUpNet()
+        self.assertEqual(len(self.network.layers[0]), 3, "There should be 3 neurons in this layer.")
+        self.assertEqual(len(self.network.layers[1]), 4, "There should be 4 neurons in this layer.")

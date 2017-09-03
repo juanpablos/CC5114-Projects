@@ -22,6 +22,9 @@ class NeuronLayer:
 
         self.learning_rate = learning_rate
 
+    def __len__(self):
+        return len(self.neurons)
+
     def initialize(self, n_inputs=None, neuron_weights=None):
         if neuron_weights:
             self.number = len(neuron_weights)

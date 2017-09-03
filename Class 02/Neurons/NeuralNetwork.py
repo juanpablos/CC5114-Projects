@@ -25,7 +25,7 @@ class NeuralNetwork:
     def initialize(self, n_inputs=None, network=None):
         if not self.manual:
             try:
-                assert len(self.layers) > 1
+                assert len(self.layers) > 0
 
                 self.layers[0].initialize(n_inputs)
                 for i in range(1, len(self.layers)):
@@ -36,7 +36,7 @@ class NeuralNetwork:
                 self.initialized = True
 
             except AssertionError:
-                raise LayerError("Needs at least 2 layers.")
+                raise LayerError("Needs at least 1 layers.")
         else:
             try:
                 assert network is not None

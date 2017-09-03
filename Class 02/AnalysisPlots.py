@@ -61,7 +61,7 @@ def generate_network(n_inputs, neurons_output, neurons_per_layer, layers):
 def impact_hidden_layer(train_set, test_set, train_expected, test_expected, total_layers=10, epochs=1000,
                         epoch_step=10, trials=100, output_file="hidden_impact.csv"):
 
-    assert total_layers > 1
+    assert total_layers > 0
 
     dataset = list()
     for data in zip(train_set, train_expected):

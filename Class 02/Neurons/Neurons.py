@@ -1,6 +1,6 @@
 import numpy as np
 
-from .exceptions import UnmatchedLengthError
+from Neurons.exceptions import UnmatchedLengthError
 
 
 class Perceptron:

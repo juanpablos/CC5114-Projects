@@ -1,4 +1,4 @@
-from src.Neurons.NeuralNetwork import NeuralNetwork
+from Neurons.NeuralNetwork import NeuralNetwork
 
 network = NeuralNetwork()
 network.add_layer(neuron_number=3)

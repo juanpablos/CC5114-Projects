@@ -151,6 +151,10 @@ def split_seeds(formatted_array, number_test=40):
     return train_set, test_set, train_expected, test_expected
 
 
+def get_seeds(seeds_file, test_sample_class):
+    return split_seeds(get_normalized_seeds(seeds_file), test_sample_class)
+
+
 def make_dataset(data, expected):
     dataset = list()
     for d in zip(data, expected):

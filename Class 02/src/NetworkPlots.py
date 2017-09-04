@@ -2,8 +2,8 @@ import random
 
 import matplotlib.pyplot as plt
 
-from src.Neurons.NeuralNetwork import NeuralNetwork
-from src.Utils.network_utilities import generate_network
+from Neurons.NeuralNetwork import NeuralNetwork
+from Utils.utilities import generate_network
 
 
 def make_learning_graph(train_set, test_set, train_expected, test_expected, iterations=1000, evaluation=100):

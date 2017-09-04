@@ -3,8 +3,8 @@ import random
 import matplotlib
 import matplotlib.pyplot as plt
 
-from src.Neurons.NeuralNetwork import NeuralNetwork
-from src.Utils.network_utilities import generate_network, get_normalized_seeds, split_seeds
+from Neurons.NeuralNetwork import NeuralNetwork
+from Utils.utilities import generate_network, get_normalized_seeds, split_seeds, get_seeds
 
 matplotlib.style.use('ggplot')
 
@@ -21,12 +21,13 @@ def two_scales(ax1, x, data1, data2, c1, c2):
     return ax1, ax2
 
 
-def make_learning_graph(train_set, test_set, train_expected, test_expected, iterations=1000):
+def make_learning_graph(train_set, test_set, train_expected, test_expected, iterations=1000, shuffle=True):
     dataset = list()
     for data in zip(train_set, train_expected):
         dataset.append(list(data))
 
-    random.shuffle(dataset)
+    if shuffle:
+        random.shuffle(dataset)
 
     network_correctness = list()
     total_error = list()
@@ -41,7 +42,7 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
         error = network.train_with_dataset(dataset=dataset, epoch=iteration)
 
         # evaluation
-        correctness = 0
+        correctness = 0.
         for test_, exp in zip(test_set, test_expected):
 
             ideal_output = exp
@@ -50,7 +51,7 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
             normalized_output = [round(e, 0) for e in actual]
 
             if ideal_output == normalized_output:
-                correctness += 1
+                correctness += 1.
 
         if error:
             total_error.append(error[-1])
@@ -60,15 +61,28 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
     for i in range(1, iterations):
         x_axis.append(i)
 
+    return x_axis, network_correctness, total_error
+
+
+def run_plot(seeds_file, test_sample_class, iterations, shuffle=True):
+    train, test, train_exp, test_exp = get_seeds(seeds_file, test_sample_class)
+
+    # This is reeeeeally slow, but shows a cool plot
+    x_axis, network_correctness, total_error = make_learning_graph(train, test, train_exp, test_exp,
+                                                                   iterations=iterations, shuffle=shuffle)
+
+    return x_axis, network_correctness, total_error, len(test)
+
+
+def main():
+    x_axis, network_correctness, total_error, test = run_plot("formatted_seeds.txt", 35, 100)
     fig, ax = plt.subplots()
+
     ax1, ax2 = two_scales(ax, x_axis, total_error, network_correctness, 'r', 'b')
     ax1.set_ylim([0, max(total_error)])
-
-    plt.title("Seeds dataset with {} test iterations".format(len(test_set)))
+    plt.title("Seeds dataset with {} test iterations".format(test))
     plt.show()
 
 
-train, test, train_exp, test_exp = split_seeds(get_normalized_seeds("formatted_seeds.txt"), 35)
-
-# This is reeeeeally slow, but shows a cool plot
-make_learning_graph(train, test, train_exp, test_exp, iterations=50)
+if __name__ == '__main__':
+    main()

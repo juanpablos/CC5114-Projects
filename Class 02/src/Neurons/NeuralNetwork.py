@@ -40,10 +40,13 @@ class NeuralNetwork:
         else:
             try:
                 assert network is not None
-                assert isinstance(network, list)
+                assert len(network) > 0
+                if len(network) > 1:
+                    # check weights in last layer corresponds to neurons in the layer before
+                    assert (len(network[-1][0]) - 1) == (len(network[-2]))
 
                 for layer in network:
-                    self.layers.append(NeuronLayer().initialize(neuron_weights=layer))
+                    self.layers.append(NeuronLayer(learning_rate=self.learning_rate).initialize(neuron_weights=layer))
                 self.firstLayer = self.layers[0]
                 self.lastLayer = self.layers[len(self.layers) - 1]
 

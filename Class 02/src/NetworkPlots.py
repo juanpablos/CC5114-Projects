@@ -6,7 +6,8 @@ from Neurons.NeuralNetwork import NeuralNetwork
 from Utils.utilities import generate_network
 
 
-def make_learning_graph(train_set, test_set, train_expected, test_expected, iterations=1000, evaluation=100):
+def make_learning_graph(train_set, test_set, train_expected, test_expected, epoch=1000, evaluation=100, epoch_step=10):
+
     dataset = list()
     for data in zip(train_set, train_expected):
         dataset.append(list(data))
@@ -16,7 +17,8 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
 
     a_network = generate_network(n_inputs=len(train_set[0]), neurons_output=len(train_expected[0]),
                                  neurons_per_layer=3, layers=2)
-    for iteration in range(1, iterations, 10):
+
+    for iteration in range(1, (epoch + epoch_step), epoch_step):
         network = NeuralNetwork(manual=True)
         network.initialize(network=a_network)
 
@@ -39,10 +41,8 @@ def make_learning_graph(train_set, test_set, train_expected, test_expected, iter
         network_correctness.append(correctness / evaluation)
 
     x_axis = list()
-    for i in range(1, iterations, 10):
+    for i in range(1, (epoch + epoch_step), epoch_step):
         x_axis.append(i)
-
-    # total_error.insert(1, total_error[0])
 
     per_label, = plt.plot(x_axis, network_correctness, 'b', alpha=0.5, label='Network training')
     error_label, = plt.plot(x_axis, total_error, 'r', alpha=0.5, label='Network error')
@@ -80,4 +80,4 @@ test_expected_XOR = [
     [0, 1]
 ]
 
-make_learning_graph(train_set_XOR, test_set_XOR, train_expected_XOR, test_expected_XOR, iterations=600)
+make_learning_graph(train_set_XOR, test_set_XOR, train_expected_XOR, test_expected_XOR, epoch=1000, epoch_step=10)

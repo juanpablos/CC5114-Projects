@@ -10,22 +10,21 @@ network.initialize(n_inputs=2)
 
 network.print_weights()
 network.print_bias()
-
-a = network.train_with_dataset(dataset=[
+epoch = 500
+network.train_with_dataset(dataset=[
     [[0., 0.], [0]],
     [[1., 1.], [0]],
     [[1., 0.], [1]],
     [[0., 1.], [1]]
-], epoch=100)
+], epoch=epoch)
 
-print(a)
 
 oneone = network.feed([1., 1.])[0]
 onecero = network.feed([1., 0.])[0]
 ceroone = network.feed([0., 1.])[0]
 cerocero = network.feed([0., 0.])[0]
 
-print("Training network")
+print("In training network - {} epoch - XOR".format(epoch))
 print("1 AND 1 = {} actual output: {}".format(round(oneone, 0), oneone))
 print("1 AND 0 = {} actual output: {}".format(round(onecero, 0), onecero))
 print("0 AND 1 = {} actual output: {}".format(round(ceroone, 0), ceroone))
@@ -54,7 +53,7 @@ onecero2 = network_trained.feed([1., 0.])[0]
 ceroone2 = network_trained.feed([0., 1.])[0]
 cerocero2 = network_trained.feed([0., 0.])[0]
 
-print("Trained network")
+print("Trained network - 1000 epoch - XOR")
 print("1 AND 1 = {} actual output: {}".format(round(oneone2, 0), oneone2))
 print("1 AND 0 = {} actual output: {}".format(round(onecero2, 0), onecero2))
 print("0 AND 1 = {} actual output: {}".format(round(ceroone2, 0), ceroone2))

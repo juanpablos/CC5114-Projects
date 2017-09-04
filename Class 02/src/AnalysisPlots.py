@@ -44,7 +44,7 @@ def get_network(data_type, variable, n_inputs, neurons_output, neurons_per_layer
 # neurons vs learning rate
 def get_analysis_data(train_set, test_set, train_expected, test_expected, output_file, data_type,
                       max_neurons_per_layer=3, total_layers=10,
-                      epochs=1000, epoch_step=10, trials=100):
+                      epochs=1000, epoch_step=10, trials=100, average=10, shuffle=True):
     # basic constraints
     assert total_layers > 0
     assert total_layers > 0
@@ -52,6 +52,9 @@ def get_analysis_data(train_set, test_set, train_expected, test_expected, output
 
     # zip the data lists
     dataset = make_dataset(train_set, train_expected)
+
+    if shuffle:
+        random.shuffle(dataset)
 
     with open(output_file, 'w', newline="\n") as file:
         writer = csv.writer(file)
@@ -69,30 +72,77 @@ def get_analysis_data(train_set, test_set, train_expected, test_expected, output
 
         for variable in range(1, max_variable + 1):
 
-            a_network = get_network(data_type=data_type, variable=variable,
-                                    n_inputs=len(train_set[0]), neurons_output=len(train_expected[0]),
-                                    neurons_per_layer=max_neurons_per_layer, layers=total_layers)
+            net_list = list()
+            for _ in range(average):
+                a_network = get_network(data_type=data_type, variable=variable,
+                                        n_inputs=len(train_set[0]), neurons_output=len(train_expected[0]),
+                                        neurons_per_layer=max_neurons_per_layer, layers=total_layers)
+                net_list.append(a_network)
 
             for epoch in range(1, epochs + epoch_step, epoch_step):
+
+                av_correctness = list()
+                for net in net_list:
+
+                    network = NeuralNetwork(manual=True)
+                    network.initialize(network=net)
+
+                    print("{}: {} of {}\nepoch: {} of {}\n".format(data_type, variable, max_variable, epoch, epochs))
+                    # training
+                    network.train_with_dataset(dataset=dataset, epoch=epoch)
+
+                    # evaluation
+                    correctness = 0.
+                    tests = list(zip(test_set, test_expected))
+                    for t in range(trials):
+                        _test = random.choice(tests)
+
+                        ideal_output = _test[1]
+                        actual = network.feed(_test[0])
+                        normalized_output = [round(e, 0) for e in actual]
+                        if ideal_output == normalized_output:
+                            correctness += 1.
+
+                    av_correctness.append(correctness / trials)
+                writer.writerow([epoch, variable, sum(av_correctness) / len(av_correctness)])
+
+
+# Get data about layers vs neurons for N epochs
+def layer_neuron_acc(train_set, test_set, train_expected, test_expected, output_file,
+                     max_layers=10, max_neurons=10, epoch=1000, shuffle=True):
+
+    dataset = make_dataset(train_set, train_expected)
+    if shuffle:
+        random.shuffle(dataset)
+
+    with open(output_file, 'w', newline="\n") as file:
+        writer = csv.writer(file)
+        # write the current analysis data type
+        writer.writerow(["layer", "neuron", "accuracy"])
+
+        for layer in range(1, max_layers + 1):
+            for neuron in range(1, max_neurons + 1):
+                a_network = generate_network(n_inputs=len(test_set[0]), neurons_output=len(train_expected[0]),
+                                             neurons_per_layer=neuron, layers=layer)
+
                 network = NeuralNetwork(manual=True)
                 network.initialize(network=a_network)
 
-                print("{}: {} of {}\nepoch: {} of {}\n".format(data_type, variable, max_variable, epoch, epochs))
-                # training
+                print("layer: {} of {}\nneuron: {} of {}\n".format(layer, max_layers, neuron, max_neurons))
+
                 network.train_with_dataset(dataset=dataset, epoch=epoch)
 
                 # evaluation
                 correctness = 0.
-                tests = list(zip(test_set, test_expected))
-                for t in range(trials):
-                    _test = random.choice(tests)
+                for t, ex in zip(test_set, test_expected):
 
-                    ideal_output = _test[1]
-                    actual = network.feed(_test[0])
+                    ideal_output = ex
+                    actual = network.feed(t)
                     normalized_output = [round(e, 0) for e in actual]
                     if ideal_output == normalized_output:
                         correctness += 1.
-                writer.writerow([epoch, variable, correctness / trials])
+
+                writer.writerow([layer, neuron, correctness / len(test_set)])
 
 
 # Real test with seeds dataset
@@ -213,7 +263,7 @@ def plot_hidden_impact(file_location="Analysis/hidden_impact.csv"):
 def plot_neuron_impact(file_location="Analysis/neuron_impact.csv"):
     data_neuron = pd.read_csv(file_location)
     data_neuron.plot.scatter(x='epoch', y='neuron', c='correctness', s=50, colormap='gist_rainbow',
-                             title="Number of neurons vs learning rate with 2 layers - XOR")
+                             title="Number of neurons vs learning rate with 2 layers - seed")
     plt.show()
 
 
@@ -269,6 +319,22 @@ def plot_lr_epoch(file_location="Analysis/learning_rate_comp.csv"):
     plt.show()
 
 
+# Data processing plot
+def plot_layer_neuron(file_location="Analysis/layer_vs_neuron.csv"):
+    data_time = pd.read_csv(file_location)
+    rs = data_time.pivot("layer", "neuron", "accuracy")
+    ax = sns.heatmap(rs, annot=True, cmap='jet', cbar_kws={'label': "Accuracy"})
+
+    ax.invert_yaxis()
+
+    plt.xlabel("Neurons")
+    plt.ylabel("Layers")
+
+    plt.title("Accuracy for layers vs neurons for 200 epoch - seeds")
+
+    plt.show()
+
+
 # --------- DATASETS -----------
 
 train_set_XOR = [
@@ -303,7 +369,7 @@ seed_train_set, seed_test_set, seed_train_expected, seed_test_expected = get_see
 analysis_folder = "Analysis/"
 
 hidden_file = analysis_folder + "hidden_impact.csv"
-neuron_file = analysis_folder + "neuron_impact3.csv"
+neuron_file = analysis_folder + "neuron_impact_seeds2.csv"
 
 seeds_shuffled_file = analysis_folder + "seeds_analysis_shuffled.csv"
 seeds_sorted_file = analysis_folder + "seeds_analysis_sorted.csv"
@@ -313,12 +379,14 @@ time_data = analysis_folder + "layer_neuron_time.csv"
 lr_data_sorted = analysis_folder + "learning_rate_comp_sorted.csv"
 lr_data_shuffled = analysis_folder + "learning_rate_comp_shuffled.csv"
 
+layer_neuron = analysis_folder + "layer_vs_neuron_seed.csv"
+
 # --------- GET DATA -----------
 
 # get_analysis_data(train_set_XOR, test_set_XOR, train_expected_XOR, test_expected_XOR, output_file=hidden_file,
 #                   data_type="layer", epochs=1000, total_layers=10, max_neurons_per_layer=3)
-get_analysis_data(train_set_XOR, test_set_XOR, train_expected_XOR, test_expected_XOR, output_file=neuron_file,
-                  data_type="neuron", epochs=1000, epoch_step=50, total_layers=2, max_neurons_per_layer=10)
+# get_analysis_data(train_set_XOR, test_set_XOR, train_expected_XOR, test_expected_XOR, output_file=neuron_file,
+#                   data_type="neuron", epochs=100, epoch_step=20, total_layers=2, max_neurons_per_layer=20, average=1)
 
 # run_seeds_analysis("formatted_seeds.txt", 35, 100, seeds_shuffled_file)
 # run_seeds_analysis("formatted_seeds.txt", 35, 100, seeds_sorted_file, shuffle=False)
@@ -330,10 +398,13 @@ get_analysis_data(train_set_XOR, test_set_XOR, train_expected_XOR, test_expected
 # learning_rate_comparison(seed_train_set, seed_test_set, seed_train_expected, seed_test_expected, lr_data_shuffled,
 #                          layers=2, neurons=5, max_learning_rate=2, learning_step=0.1, epochs=100)
 
+layer_neuron_acc(seed_train_set, seed_test_set, seed_train_expected, seed_test_expected, layer_neuron,
+                 max_layers=10, max_neurons=10, epoch=200)
+
 # --------- PLOT -----------
 
 # plot_hidden_impact(hidden_file)
-plot_neuron_impact(neuron_file)
+# plot_neuron_impact(neuron_file)
 #
 # plot_seeds_data(seeds_shuffled_file, "shuffled")
 #
@@ -343,3 +414,5 @@ plot_neuron_impact(neuron_file)
 #
 # plot_lr_epoch(lr_data_shuffled)
 # plot_lr_epoch(lr_data_sorted)
+
+plot_layer_neuron(layer_neuron)

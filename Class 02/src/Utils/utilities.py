@@ -3,7 +3,10 @@ import random
 
 
 def get_rand():
-    return random.random()
+    res = 0.
+    while res < 0.2:
+        res = random.random()
+    return res
 
 
 def prettify_network(a_network):

@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from Neurons.NeuralNetwork import NeuralNetwork
-from Utils.utilities import generate_network, get_normalized_seeds, split_seeds, get_seeds
+from Utils.utilities import generate_network, get_seeds
 
 matplotlib.style.use('ggplot')
 

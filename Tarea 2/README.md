@@ -7,6 +7,9 @@ Comparison with a vanilla neural network to see which performs better.
 To run the network, the following libraries are needed:
 
 * Numpy
+* TensorFlow (to run RNN_tensor_flow.py)
+* Matplotlib
+* Pandas (for data manipulation)
 
 For git metrics the following git commands were used:
 

@@ -2,9 +2,9 @@ import csv
 import re
 
 
-status_file = "cython_status.txt"
-statistics_file = "cython_statistics.txt"
-output_file = "cython_out.csv"
+status_file = "scala_status.txt"
+statistics_file = "scala_statistics.txt"
+output_file = "scala_out_alt.csv"
 
 data = {} # key:[list] - sha:data
 
@@ -53,7 +53,7 @@ def get_statistics(data_file):
                     inserted_lines = int(temp[1].split(' ')[0].strip())
                     deleted_lines = int(temp[2].split(' ')[0].strip())
                 else:
-                    if 'inserted' in temp[1]:
+                    if 'insertions' in temp[1]:
                         inserted_lines = int(temp[1].split(' ')[0].strip())
                     else:
                         deleted_lines = int(temp[1].split(' ')[0].strip())
@@ -61,13 +61,30 @@ def get_statistics(data_file):
         data[commit_sha] += [inserted_lines, deleted_lines]
 
 
-def out_to_file(outfile):
+def out_to_file_trad(outfile):
     with open(outfile, 'w', newline="\n") as o:
         out = csv.writer(o)
-        for k, v in data.items():
-            out.writerow(v)
+        out.writerow(['new_files', 'deleted_files', 'modified_files', 'inserted_lines', 'deleted_lines',
+                      'new_files_pred', 'deleted_files_pred', 'modified_files_pred', 'inserted_lines_pred',
+                      'deleted_lines_pred'])
+
+        values = list(data.values())
+        for i in range(1, len(values)):
+            out.writerow(values[i-1] + values[i])
+
+def out_to_file_alternative(outfile):
+    with open(outfile, 'w', newline="\n") as o:
+        out = csv.writer(o)
+        out.writerow(['new_files', 'deleted_files', 'modified_files', 'inserted_lines', 'deleted_lines',
+                      'modified_files_pred', 'inserted_lines_pred', 'deleted_lines_pred'])
+
+        values = list(data.values())
+        for i in range(1, len(values)):
+            out.writerow(values[i-1] + values[i][2:])
 
 
-get_high_level_data(status_file)
-get_statistics(statistics_file)
-out_to_file(output_file)
+if __name__ == '__main__':
+    get_high_level_data(status_file)
+    get_statistics(statistics_file)
+    #out_to_file_trad(output_file)
+    out_to_file_alternative(output_file)

@@ -12,7 +12,7 @@ def derivative_sigmoid(z):
 def softmax(x, i):
     return np.exp(x[i]) / np.sum(np.exp(x[i]))
 
-
+# TODO: FINISH
 class RNN:
     def __init__(self, input_size, hidden_size, out_size, learning_rate, sequence=3):
         self.input_size = input_size

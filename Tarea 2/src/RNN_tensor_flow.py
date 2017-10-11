@@ -210,11 +210,11 @@ def run_the_model(repository, network_type, to_predict, epoch=1, sequence=3):
 
 if __name__ == '__main__':  # im too lazy to run these myself
 
-    epoch = 10
+    epoch = 50
     seq_length = 3
     repos_to_do = [1, 2, 3, 4, 5, 6, 7]
     networks_use = [1, 2]
-    predictions_to_do = [3]
+    predictions_to_do = [3,4,5]
 
     repos = {
         1: 'osu',

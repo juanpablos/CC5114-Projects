@@ -2,3 +2,4 @@
 Programming homeworks for CC5114 course. 
 
 * Implementation of a neural network
+* Git activity prediction

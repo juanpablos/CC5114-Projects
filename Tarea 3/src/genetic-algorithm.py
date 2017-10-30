@@ -17,7 +17,6 @@ class GA:
         else:
             self.select_function = self.select_roulette
 
-
     def run(self):
         i = 0
         population = self.generate_population()
@@ -110,15 +109,17 @@ class GA:
         return new_element
 
 
-
 if __name__ == '__main__':
-    correct = 'hellohellohellohellohello'
+    correct = "hello"
+
+
     def f(x):
         res = 0
         for i, c in zip(x, correct):
             if i == c:
                 res += 1
         return res
+
 
     def g1():
         r = random.random()
@@ -127,10 +128,11 @@ if __name__ == '__main__':
         else:
             return '0'
 
+
     def g2():
         return random.choice(string.ascii_lowercase)
 
 
-    ga = GA(pop_size=100, mutation_rate=0.01, genes=len(correct),
+    ga = GA(pop_size=1000, mutation_rate=0.0001, genes=len(correct),
             fitness=f, generator=g2, min_fitness=len(correct), max_iter=1000, select='default')
     print(ga.run())

@@ -3,13 +3,14 @@ import string
 
 
 class GA:
-    def __init__(self, pop_size, mutation_rate, genes, fitness, generator, max_iter, select='default'):
+    def __init__(self, pop_size, mutation_rate, genes, fitness, generator, min_fitness, max_iter=100, select='default'):
         self.population_size = pop_size
         self.mutation = mutation_rate
         self.genes = genes
         self.fitness_function = fitness
         self.generator_function = generator
         self.max_iterations = max_iter
+        self.min_fitness = min_fitness
 
         if select == 'default':
             self.select_function = self.select_default
@@ -20,12 +21,16 @@ class GA:
     def run(self):
         i = 0
         population = self.generate_population()
-        while i <= self.max_iterations:
+        fitness = self.get_fitness(population)
+        best = population[fitness.index(max(fitness))]
+        while i <= self.max_iterations and self.fitness_function(best) < self.min_fitness:
             print("iter {} of {}".format(i, self.max_iterations))
-            n_fitness = self.normalize(self.get_fitness(population))
+            n_fitness = self.normalize(fitness)
             parents = self.select_function(population, n_fitness)
             population = self.create_new_population(parents)
+            fitness = self.get_fitness(population)
             i += 1
+            best = population[fitness.index(max(fitness))]
         print("{} generations".format(i))
         last_fitness = self.get_fitness(population)
         best = population[last_fitness.index(max(last_fitness))]
@@ -107,8 +112,8 @@ class GA:
 
 
 if __name__ == '__main__':
+    correct = 'hellohellohellohellohello'
     def f(x):
-        correct = 'hellohello'
         res = 0
         for i, c in zip(x, correct):
             if i == c:
@@ -126,5 +131,6 @@ if __name__ == '__main__':
         return random.choice(string.ascii_lowercase)
 
 
-    ga = GA(100, 0.05, 10, f, g2, max_iter=100, select='default')
+    ga = GA(pop_size=100, mutation_rate=0.01, genes=len(correct),
+            fitness=f, generator=g2, min_fitness=len(correct), max_iter=1000, select='default')
     print(ga.run())

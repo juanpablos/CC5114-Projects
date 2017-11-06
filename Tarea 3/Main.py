@@ -5,6 +5,9 @@ from src.hw1.Utils.utilities import get_seeds
 seed_train_set, seed_test_set, seed_train_expected, seed_test_expected = get_seeds("formatted_seeds.txt", 35)
 
 
+# TODO: implement slicing in NeuralNetwork to handle gene selection more easily
+
+
 # check for features and classes
 def get_classes(data):
     classes = list()

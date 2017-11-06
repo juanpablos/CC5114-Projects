@@ -33,6 +33,7 @@ class GA:
 
         return best
 
+    # TODO: dont iterate, create using utilities function and initialize manual network
     def generate_population(self):
         population = list()
         for p in range(self.population_size):
@@ -84,6 +85,7 @@ class GA:
                 return i - 1
         return len(acc_fitness) - 1
 
+    # TODO: modify generator function to more specific one
     def create_new_element(self, p1, p2):
         index = random.randrange(self.genes)
         new_element = p1[:index] + p2[index:]

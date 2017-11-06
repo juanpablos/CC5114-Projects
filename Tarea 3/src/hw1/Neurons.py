@@ -47,6 +47,9 @@ class Sigmoid(Perceptron):
         super().__init__(weight_list, bias, learning_rate=learning_rate)
         self.threshold = threshold
 
+    def __len__(self):
+        return len(self.weights) + 1
+
     def evaluate(self, input_list):
         try:
             assert len(self.weights) == len(input_list)

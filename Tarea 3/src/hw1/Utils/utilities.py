@@ -163,3 +163,7 @@ def make_dataset(data, expected):
     for d in zip(data, expected):
         dataset.append(list(d))
     return dataset
+
+
+if __name__ == "__main__":
+    print(generate_network(2, 1, 3, 2))

@@ -13,6 +13,17 @@ class NeuralNetwork:
 
         self.learning_rate = learning_rate
 
+    def __getitem__(self, val):
+        neurons = None
+        if len(self.layers) > 2:
+            neurons = len(self.layers[2])
+        # n_neurons, layers, learning_rate
+        parameters = [neurons, len(self.layers), self.learning_rate]
+        return parameters.__getitem__(val)
+
+    def __len__(self):
+        return len(self.layers)
+
     def add_layer(self, neuron_number):
         if not self.initialized:
             if self.manual:

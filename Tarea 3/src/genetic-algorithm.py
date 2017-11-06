@@ -3,7 +3,7 @@ import string
 
 
 class GA:
-    def __init__(self, pop_size, mutation_rate, genes, fitness, generator, min_fitness, max_iter=100, select='default'):
+    def __init__(self, pop_size, mutation_rate, genes, fitness, generator, min_fitness, max_iter=100):
         self.population_size = pop_size
         self.mutation = mutation_rate
         self.genes = genes
@@ -12,10 +12,7 @@ class GA:
         self.max_iterations = max_iter
         self.min_fitness = min_fitness
 
-        if select == 'default':
-            self.select_function = self.select_default
-        else:
-            self.select_function = self.select_roulette
+        self.select_function = self.select_default
 
     def run(self):
         i = 0
@@ -87,19 +84,6 @@ class GA:
                 return i - 1
         return len(acc_fitness) - 1
 
-    def select_roulette(self, population, n_fitness):
-        parents = list()
-        for _ in range(2 * self.population_size):
-            prob = random.uniform(0, sum(n_fitness))
-            index = 0
-            for i, fitness in enumerate(n_fitness):
-                if prob <= 0:
-                    index = i
-                    break
-                prob -= fitness
-            parents.append(population[index])
-        return parents
-
     def create_new_element(self, p1, p2):
         index = random.randrange(self.genes)
         new_element = p1[:index] + p2[index:]
@@ -134,5 +118,5 @@ if __name__ == '__main__':
 
 
     ga = GA(pop_size=1000, mutation_rate=0.0001, genes=len(correct),
-            fitness=f, generator=g2, min_fitness=len(correct), max_iter=1000, select='default')
+            fitness=f, generator=g2, min_fitness=len(correct), max_iter=1000)
     print(ga.run())

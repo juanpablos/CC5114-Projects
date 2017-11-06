@@ -1,6 +1,8 @@
-import numpy as np
+import random
 
-data = list()
+from src.hw1.Utils.utilities import get_seeds
+
+seed_train_set, seed_test_set, seed_train_expected, seed_test_expected = get_seeds("formatted_seeds.txt", 35)
 
 
 # check for features and classes
@@ -12,16 +14,14 @@ def get_classes(data):
     return len(classes)
 
 
-topology = (len(data[0]), get_classes(data))  # in | out
+topology = (len(seed_train_set[0]), get_classes(seed_train_expected))  # in | out
 
 
-def generator():
-    # check
-    return np.random.rand(topology[0])
+def generator_hyperparameters():
+    layer_range = list(range(1, 5))
+    neuron_number_range = list(range(2, 211, 10))
+    learning_rate_range = [i / 100 for i in range(1, 60, 10)]
 
-
-def fitness(networks):
-    fitness_list = list()
-    for network in networks:
-        fitness_list.append(network.eval(data))
-    return fitness_list
+    return {'n_inputs': topology[0], 'neurons_output': topology[1],
+            'layers': random.choice(layer_range), 'neurons_per_layer': random.choice(neuron_number_range),
+            'learning_rate': random.choice(learning_rate_range)}

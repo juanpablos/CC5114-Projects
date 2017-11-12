@@ -3,10 +3,7 @@ import random
 
 
 def get_rand():
-    res = 0.
-    while res < 0.2:
-        res = random.random()
-    return res
+    return random.uniform(-5, 5)
 
 
 def prettify_network(a_network):

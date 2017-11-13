@@ -7,4 +7,5 @@ To run, the following libraries are required:
 * Numpy
 
 The following are required to run the plots:
+* Matplotlib
 * Pandas

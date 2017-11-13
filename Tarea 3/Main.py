@@ -1,5 +1,6 @@
 import csv
 import random
+from time import time
 
 from src.genetic_algorithm import GA
 from src.hw1.NeuralNetwork import NeuralNetwork
@@ -8,10 +9,15 @@ from src.hw1.Utils.utilities import get_seeds, generate_network
 seed_train_set, seed_test_set, seed_train_expected, seed_test_expected = get_seeds("formatted_seeds.txt", 35)
 test_data = seed_train_set + seed_test_set
 test_expected = seed_train_expected + seed_test_expected
+
+xor_data = [[0, 0], [1, 0], [0, 1], [1, 1]]
+xor_exp = [[1, 0], [0, 1], [0, 1], [1, 0]]
+
 layers = 2
 neurons = 5
 
 topology = (len(seed_train_set[0]), len(seed_train_expected[0]))  # in | out
+# topology = (2, 2)
 
 
 def network_generator():
@@ -49,13 +55,14 @@ def fitness_function_weights(network):
 
 
 if __name__ == '__main__':
-    ga = GA(pop_size=500, mutation_rate=0.01, fitness=fitness_function_weights,
+    ga = GA(pop_size=50, mutation_rate=0.3, fitness=fitness_function_weights,
             net_generator=network_generator, single_gen=get_rand, breed_function=breed,
-            min_fitness=0.9, max_iter=100)
+            min_fitness=1.1, max_iter=100)
+    start = time()
     fitness, avg, best = ga.run()
     print("best is: {}\nwith {} acc\ntook {} generations".format(best, fitness[-1], len(fitness)))
-
-    with open("network_out2.csv", 'w', newline="\n") as o:
+    print("took {} seconds".format(time() - start))
+    with open("network_out_test.csv", 'w', newline="\n") as o:
         out = csv.writer(o)
         out.writerow(['generation', 'best_fitness', 'avg_value'])
         for i, fit in enumerate(fitness):

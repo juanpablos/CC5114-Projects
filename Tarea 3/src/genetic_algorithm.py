@@ -24,7 +24,6 @@ class GA:
 
         best_fitness_list = list()
         avg_list = list()
-
         self.population = self.generate_population()
         self.fitness = self.get_fitness(self.population)
         best = self.population[self.fitness.index(max(self.fitness))]
@@ -103,17 +102,17 @@ class GA:
     def create_new_element(self, p1, p2):
         child1, child2 = self.breed_function(p1, p2)
         final_child = child1
-        candidates = [child1, child2, p1, p2]
-        fitness = [self.fitness_function(child1), self.fitness_function(child2),
-                   self.fitness[self.population.index(p1)], self.fitness[self.population.index(p2)]]
+        #candidates = [child1, child2, p1, p2]
+        #fitness = [self.fitness_function(child1), self.fitness_function(child2),
+        #           self.fitness[self.population.index(p1)], self.fitness[self.population.index(p2)]]
 
         # choose best child
-        if fitness[0] < fitness[1]:
-            final_child = candidates[1]
+        if self.fitness_function(child1) < self.fitness_function(child2):
+            final_child = child2
 
         # if the children are too weak, keep the strongest parent
-        if max(fitness[0], fitness[1]) < (max(fitness[2], fitness[3]) * 0.8):
-            final_child = copy.deepcopy(candidates[fitness.index(max(fitness[2], fitness[3]))])
+        #if max(fitness[0], fitness[1]) < (max(fitness[2], fitness[3]) * 0.8):
+        #    final_child = copy.deepcopy(candidates[fitness.index(max(fitness[2], fitness[3]))])
 
         # mutation
         if random.random() < self.mutation:
@@ -127,13 +126,20 @@ class GA:
         neuron = random.randrange(len(final_child[layer]))
 
         # weights
-        if rand < 0.95:
+        if rand < 0.99:
             weight = random.randrange(len(final_child[layer][neuron]))
-            rand = random.random()
+            rand = random.randint(0, 4)
+
+            if rand == 0:
+                final_child[layer][neuron][weight] *= (-1.)
             # scale weight
-            if rand < 0.5:
-                final_child[layer][neuron][weight] *= random.uniform(-2, 2)
-                # replace
+            elif rand == 1:
+                final_child[layer][neuron][weight] *= random.uniform(0.5, 1.5)
+            elif rand == 2:
+                final_child[layer][neuron][weight] += random.uniform(0.01, 1.)
+            elif rand == 3:
+                final_child[layer][neuron][weight] -= random.uniform(0.01, 1.)
+            # replace
             else:
                 final_child[layer][neuron][weight] = self.random_generator()
 

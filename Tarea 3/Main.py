@@ -1,3 +1,4 @@
+import csv
 import random
 
 from src.genetic_algorithm import GA
@@ -48,10 +49,14 @@ def fitness_function_weights(network):
 
 
 if __name__ == '__main__':
-    generators = []
-    # genes are layers
-    ga = GA(pop_size=1000, mutation_rate=0.001, fitness=fitness_function_weights,
+    ga = GA(pop_size=500, mutation_rate=0.01, fitness=fitness_function_weights,
             net_generator=network_generator, single_gen=get_rand, breed_function=breed,
-            min_fitness=0.8, max_iter=100)
-    best, gens = ga.run()
-    print("best is: {}\ntook {} generations".format(best, gens))
+            min_fitness=0.9, max_iter=100)
+    fitness, avg, best = ga.run()
+    print("best is: {}\nwith {} acc\ntook {} generations".format(best, fitness[-1], len(fitness)))
+
+    with open("network_out2.csv", 'w', newline="\n") as o:
+        out = csv.writer(o)
+        out.writerow(['generation', 'best_fitness', 'avg_value'])
+        for i, fit in enumerate(fitness):
+            out.writerow([i, fit, avg[i]])

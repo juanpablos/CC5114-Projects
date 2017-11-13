@@ -1,3 +1,4 @@
+import copy
 import random
 
 import numpy as np
@@ -20,23 +21,33 @@ class GA:
 
     def run(self):
         i = 0
+
+        best_fitness_list = list()
+        avg_list = list()
+
         self.population = self.generate_population()
         self.fitness = self.get_fitness(self.population)
         best = self.population[self.fitness.index(max(self.fitness))]
         while i <= self.max_iterations and self.fitness_function(best) < self.min_fitness:
             print("iter {} of {}".format(i, self.max_iterations))
-            print("best is: {}\nwith {} acc. Avg: {}".format(best, max(self.fitness), np.mean(self.fitness)))
+
+            best_fitness_list.append(max(self.fitness))
+            avg_list.append(np.mean(self.fitness))
+
+            print("best is: {}\nwith {} acc. Avg: {}".format(best, best_fitness_list[-1], avg_list[-1]))
             n_fitness = self.normalize(self.fitness)
             parents = self.select_function(self.population, n_fitness)
             self.population = self.create_new_population(parents)
             self.fitness = self.get_fitness(self.population)
             i += 1
             best = self.population[self.fitness.index(max(self.fitness))]
-        print("{} generations".format(i))
         last_fitness = self.get_fitness(self.population)
         best = self.population[last_fitness.index(max(last_fitness))]
 
-        return best, i - 1
+        best_fitness_list.append(max(last_fitness))
+        avg_list.append(np.mean(last_fitness))
+
+        return best_fitness_list, avg_list, best
 
     def generate_population(self):
         population = list()
@@ -96,9 +107,13 @@ class GA:
         fitness = [self.fitness_function(child1), self.fitness_function(child2),
                    self.fitness[self.population.index(p1)], self.fitness[self.population.index(p2)]]
 
+        # choose best child
+        if fitness[0] < fitness[1]:
+            final_child = candidates[1]
+
+        # if the children are too weak, keep the strongest parent
         if max(fitness[0], fitness[1]) < (max(fitness[2], fitness[3]) * 0.8):
-            # if the children are too weak, keep the strongest parent
-            final_child = candidates[fitness.index(max(fitness[2], fitness[3]))]
+            final_child = copy.deepcopy(candidates[fitness.index(max(fitness[2], fitness[3]))])
 
         # mutation
         if random.random() < self.mutation:
@@ -112,7 +127,7 @@ class GA:
         neuron = random.randrange(len(final_child[layer]))
 
         # weights
-        if rand < 0.8:
+        if rand < 0.95:
             weight = random.randrange(len(final_child[layer][neuron]))
             rand = random.random()
             # scale weight

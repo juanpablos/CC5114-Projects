@@ -1,3 +1,4 @@
+import copy
 import random
 
 
@@ -10,26 +11,40 @@ class Node:
     def eval(self):
         pass
 
+    def serialize(self):
+        pass
+
+    def copy(self):
+        return copy.deepcopy(self)
+
+    def replace(self, node):
+        # TODO: check that node is instance of Node
+        self.__class__ = node.__class__
+        self.l = node.l
+        self.r = node.r
+        self.value = node.value
+
 
 class InnerNode(Node):
+    def __str__(self):
+        return "({} {} {})".format(str(self.l), self.value.__name__, str(self.r))
+
     def eval(self):
         return self.value(self.l.eval(), self.r.eval())
 
-    def __str__(self):
-        return "{} {} {}".format(str(self.l), self.value.__name__, str(self.r))
+    def serialize(self):
+        return self.l.serialize() + [self] + self.r.serialize()
 
 
 class TerminalNode(Node):
-    def eval(self):
-        return self.value
-
     def __str__(self):
         return str(self.value)
 
-
-class NullNode(Node):
     def eval(self):
-        pass
+        return self.value
+
+    def serialize(self):
+        return [self]
 
 
 class AST:
@@ -57,15 +72,6 @@ def rename(new_name):
 
 
 if __name__ == "__main__":
-    a = TerminalNode(3)
-    b = TerminalNode(4)
-    c = InnerNode(lambda x, y: x + y, a, b)
-    d = TerminalNode(10)
-    e = InnerNode(lambda x, y: x * y, c, d)
-
-    print(e.eval())
-
-
     @rename("+")
     def add(x, y):
         return x + y
@@ -76,9 +82,14 @@ if __name__ == "__main__":
         return x - y
 
 
-    f = [add, sub]
-    t = [1, 2, 3]
-    ast = AST(f, t, 2)
+    @rename("*")
+    def mult(x, y):
+        return x * y
+
+
+    funs = [add, sub, mult]
+    t = [i for i in range(50)]
+    ast = AST(funs, t, 2)
 
     tree = ast.create_tree()
     print(tree)

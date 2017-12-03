@@ -26,8 +26,11 @@ class Node:
 
 
 class InnerNode(Node):
+    def __init__(self, value, left, right):
+        super().__init__(value, left, right)
+
     def __str__(self):
-        return "({} {} {})".format(str(self.l), self.value.__name__, str(self.r))
+        return self.value.__name__.format(str(self.l), str(self.r))
 
     def eval(self):
         return self.value(self.l.eval(), self.r.eval())
@@ -37,6 +40,9 @@ class InnerNode(Node):
 
 
 class TerminalNode(Node):
+    def __init__(self, value):
+        super().__init__(value)
+
     def __str__(self):
         return str(self.value)
 
@@ -72,25 +78,45 @@ def rename(new_name):
 
 
 if __name__ == "__main__":
-    @rename("+")
+    @rename("({0} + {1})")
     def add(x, y):
         return x + y
 
 
-    @rename("-")
+    @rename("({0} - {1})")
     def sub(x, y):
         return x - y
 
 
-    @rename("*")
+    @rename("({0} * {1})")
     def mult(x, y):
         return x * y
 
 
-    funs = [add, sub, mult]
+    @rename("max({0}, {1})")
+    def _max(x, y):
+        return max(x, y)
+
+
+    funs = [add, sub, mult, _max]
     t = [i for i in range(50)]
     ast = AST(funs, t, 2)
 
     tree = ast.create_tree()
     print(tree)
     print(tree.eval())
+
+
+    t1 = ast.create_tree()
+    t2 = ast.create_tree()
+
+    print("-"*10)
+    print(t1)
+    print(t1.eval())
+    print(t2)
+
+    t3 = t1.copy()
+    random.choice(t3.serialize()).replace(random.choice(t2.serialize()).copy())
+
+    print(t3)
+    print(t3.eval())

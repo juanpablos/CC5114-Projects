@@ -1,4 +1,5 @@
 import random
+import sys
 
 from src.tree import AST
 
@@ -14,6 +15,31 @@ class GP:
         self.max_iterations = iterations
         self.min_fitness = min_fitness
 
+    def run(self):
+        # FIXME: optimise -> multiple unneeded fitness executions
+        i = 0
+        best_fitness_list = list()
+        population = self.generate_population()
+        fitness, real_fitness = self.get_fitness(population)
+        best = population[fitness.index(max(fitness))]
+        while i < self.max_iterations and self.fitness_function(best) > self.min_fitness:
+            print("iteration {} of {}".format(i, self.max_iterations))
+            best_fitness_list.append(min(real_fitness))
+            # TODO: assert fitness.index(max(fitness)) == real_fitness.index(min(real_fitness))
+            print("best is: {}\nwith {} fitness".format(best.eval(), best_fitness_list[-1]))
+            n_fitness = self.normalize(fitness)
+            parents = self.select(population, n_fitness)
+            population = self.create_new_population(parents)
+            fitness, real_fitness = self.get_fitness(population)
+            i += 1
+            best = population[fitness.index(max(fitness))]
+        print("iteration {} of {}".format(i, self.max_iterations))
+        last_fitness, last_real_fitness = self.get_fitness(population)
+        best = population[last_fitness.index(max(last_fitness))]
+        best_fitness_list.append(min(last_real_fitness))
+        print("best is: {}\nwith {} fitness".format(best.eval(), best_fitness_list[-1]))
+        return best_fitness_list, best
+
     def generate_population(self):
         population = list()
         for _ in range(self.population_size):
@@ -22,9 +48,16 @@ class GP:
 
     def get_fitness(self, population):
         fitness = list()
+        real_fitness = list()
         for p in population:
-            fitness.append(self.fitness_function(p))
-        return fitness
+            real_f = self.fitness_function(p)
+            real_fitness.append(real_f)
+            try:
+                f = 1. / real_f
+            except ZeroDivisionError:
+                f = sys.maxsize
+            fitness.append(f)
+        return fitness, real_fitness
 
     def normalize(self, fitness):
         the_sum = sum(fitness)

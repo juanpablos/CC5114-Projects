@@ -1,6 +1,8 @@
 import random
 import sys
 
+import numpy as np
+
 from src.tree import AST
 
 
@@ -19,14 +21,17 @@ class GP:
         # FIXME: optimise -> multiple unneeded fitness executions
         i = 0
         best_fitness_list = list()
+        avg_list = list()
         population = self.generate_population()
         fitness, real_fitness = self.get_fitness(population)
         best = population[fitness.index(max(fitness))]
         while i < self.max_iterations and self.fitness_function(best) > self.min_fitness:
             print("iteration {} of {}".format(i, self.max_iterations))
             best_fitness_list.append(min(real_fitness))
+            avg_list.append(np.mean(real_fitness))
             # TODO: assert fitness.index(max(fitness)) == real_fitness.index(min(real_fitness))
             print("best is: {}\nwith {} fitness".format(best.eval(), best_fitness_list[-1]))
+            print("-" * 20)
             n_fitness = self.normalize(fitness)
             parents = self.select(population, n_fitness)
             population = self.create_new_population(parents)
@@ -37,8 +42,10 @@ class GP:
         last_fitness, last_real_fitness = self.get_fitness(population)
         best = population[last_fitness.index(max(last_fitness))]
         best_fitness_list.append(min(last_real_fitness))
+        avg_list.append(np.mean(last_real_fitness))
         print("best is: {}\nwith {} fitness".format(best.eval(), best_fitness_list[-1]))
-        return best_fitness_list, best
+        print("-" * 20)
+        return best_fitness_list, avg_list, best
 
     def generate_population(self):
         population = list()

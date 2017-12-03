@@ -70,18 +70,22 @@ class GP:
         return new_population
 
     def create_new_element(self, p1, p2):
-        new_element = None
         rand = random.random()
         if rand <= self.crossover_rate:
-            # crossover
-            pass
+            new_element = p1.copy()
+            # one liner because why not :)
+            # selects a random node in the copy of parent 1, then replaces it with a copy of a random node in parent 2
+            random.choice(new_element.serialize()).replace(random.choice(p2.serialize()).copy())
         else:
-            # return best of the 2
-            pass
+            if self.fitness_function(p1) < self.fitness_function(p2):
+                new_element = p2.copy()
+            else:
+                new_element = p1.copy()
 
         rand = random.random()
         if rand <= self.mutation_rate:
-            # mutate
-            pass
+            # a new subtree with random depth in [0, max_depth]
+            depth = random.randint(0, self.generator.depth)
+            random.choice(new_element.serialize()).replace(self.generator.create(depth))
 
         return new_element

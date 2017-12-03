@@ -59,14 +59,15 @@ class AST:
         self.terminals = terminals
         self.depth = depth
 
-    def create(self):
+    def create(self, max_depth=None):
         def create_rec_tree(depth):
             if depth > 0:
                 return InnerNode(random.choice(self.functions), create_rec_tree(depth - 1), create_rec_tree(depth - 1))
             else:
                 return TerminalNode(random.choice(self.terminals))
 
-        return create_rec_tree(self.depth)
+        # python has short-circuit boolean expressions AKA lazy conditions
+        return create_rec_tree(max_depth or self.depth)
 
 
 def rename(new_name):

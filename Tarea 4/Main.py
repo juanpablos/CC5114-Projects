@@ -88,3 +88,5 @@ if __name__ == "__main__":
         o.write("mutation rate: {}\n".format(mutation_rate))
         o.write("max iterations: {}\n".format(iterations))
         o.write("min fitness: {}\n".format(min_fitness))
+
+

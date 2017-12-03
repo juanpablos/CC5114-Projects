@@ -59,7 +59,7 @@ class AST:
         self.terminals = terminals
         self.depth = depth
 
-    def create_tree(self):
+    def create(self):
         def create_rec_tree(depth):
             if depth > 0:
                 return InnerNode(random.choice(self.functions), create_rec_tree(depth - 1), create_rec_tree(depth - 1))
@@ -102,13 +102,13 @@ if __name__ == "__main__":
     t = [i for i in range(50)]
     ast = AST(funs, t, 2)
 
-    tree = ast.create_tree()
+    tree = ast.create()
     print(tree)
     print(tree.eval())
 
 
-    t1 = ast.create_tree()
-    t2 = ast.create_tree()
+    t1 = ast.create()
+    t2 = ast.create()
 
     print("-"*10)
     print(t1)

@@ -33,7 +33,7 @@ def mult(x, y):
 @rename("({0} / {1})")
 def div(x, y):
     try:
-        return x * y
+        return x / y
     except ZeroDivisionError:
         return sys.maxsize
 
@@ -43,12 +43,14 @@ if __name__ == "__main__":
     target_number = 5649163
 
 
+    # number based fitness - does not work with equations
     def fitness(element):
         generated = element.eval()
 
         return abs(target_number - generated)
 
 
+    # number based fitness - does not work with equations
     def length_fitness(element):
         return fitness(element) + len(element.serialize())
 

@@ -30,7 +30,7 @@ class GP:
             best_fitness_list.append(min(real_fitness))
             avg_list.append(np.mean(real_fitness))
             # TODO: assert fitness.index(max(fitness)) == real_fitness.index(min(real_fitness))
-            print("best is: {}\nwith {} fitness".format(best.eval(), best_fitness_list[-1]))
+            print("best is: {}\nwith {} fitness".format(best, best_fitness_list[-1]))
             print("-" * 20)
             n_fitness = self.normalize(fitness)
             parents = self.select(population, n_fitness)
@@ -43,7 +43,7 @@ class GP:
         best = population[last_fitness.index(max(last_fitness))]
         best_fitness_list.append(min(last_real_fitness))
         avg_list.append(np.mean(last_real_fitness))
-        print("best is: {}\nwith {} fitness".format(best.eval(), best_fitness_list[-1]))
+        print("best is: {}\nwith {} fitness".format(best, best_fitness_list[-1]))
         print("-" * 20)
         return best_fitness_list, avg_list, best
 

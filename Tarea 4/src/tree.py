@@ -8,7 +8,7 @@ class Node:
         self.l = left
         self.r = right
 
-    def eval(self):
+    def eval(self, eval_dict=None):
         pass
 
     def serialize(self):
@@ -32,8 +32,8 @@ class InnerNode(Node):
     def __str__(self):
         return self.value.__name__.format(str(self.l), str(self.r))
 
-    def eval(self):
-        return self.value(self.l.eval(), self.r.eval())
+    def eval(self, eval_dict=None):
+        return self.value(self.l.eval(eval_dict), self.r.eval(eval_dict))
 
     def serialize(self):
         return self.l.serialize() + [self] + self.r.serialize()
@@ -46,8 +46,11 @@ class TerminalNode(Node):
     def __str__(self):
         return str(self.value)
 
-    def eval(self):
-        return self.value
+    def eval(self, eval_dict=None):
+        try:
+            return eval_dict[self.value]
+        except (KeyError, TypeError):
+            return self.value
 
     def serialize(self):
         return [self]
@@ -100,24 +103,9 @@ if __name__ == "__main__":
 
 
     funs = [add, sub, mult, _max]
-    t = [i for i in range(50)]
+    t = [i for i in range(5)] + ['x']
     ast = AST(funs, t, 2)
 
     tree = ast.create()
     print(tree)
-    print(tree.eval())
-
-
-    t1 = ast.create()
-    t2 = ast.create()
-
-    print("-"*10)
-    print(t1)
-    print(t1.eval())
-    print(t2)
-
-    t3 = t1.copy()
-    random.choice(t3.serialize()).replace(random.choice(t2.serialize()).copy())
-
-    print(t3)
-    print(t3.eval())
+    print(tree.eval({'x': 10}))
